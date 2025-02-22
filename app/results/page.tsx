@@ -17,10 +17,7 @@ import {
 import { CustomerRecord, ProcessedData } from "@/lib/types";
 import { useMatchStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
-import { PrismaClient } from "@prisma/client";
 import { matchCustomers } from "@/lib/matching";
-
-const ITEMS_PER_PAGE = 100;
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -39,7 +36,6 @@ export default function ResultsPage() {
   const data = useMatchStore((state) => state.data);
   const { confirmMatch, rejectMatch, bulkConfirm, bulkReject, exportResults } =
     useMatchStore();
-  const [excelAData, setExcelAData] = useState<CustomerRecord[]>([]);
   const [excelBData, setExcelBData] = useState<CustomerRecord[]>([]);
 
   const handleClearData = async () => {
@@ -58,13 +54,6 @@ export default function ResultsPage() {
       console.error(error);
       alert("Error clearing database");
     }
-  };
-
-  // Pagination logic
-  const getPaginatedData = (data: any[]) => {
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return data.slice(startIndex, endIndex);
   };
 
   const renderPagination = (totalItems: number) => {
@@ -440,8 +429,8 @@ export default function ResultsPage() {
             <TabsContent value="unmatched" className="space-y-4">
               <div>
                 <h2>Unmatched ({matches.unmatched.length})</h2>
-                {matches.unmatched.length > 0 ? (
-                  getPaginatedData(matches.unmatched).map((record, index) => (
+                {matches && matches.unmatched.length > 0 ? (
+                  matches.unmatched.map((record, index) => (
                     <div key={`unmatched-${record.customerId}-${index}`}>
                       <Card className="p-4">
                         <div className="flex items-center gap-4">
