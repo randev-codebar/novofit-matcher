@@ -14,17 +14,24 @@ export async function GET(request: Request) {
       prisma.excelA.findMany({
         skip,
         take: limit,
+        distinct: ["locationId"],
       }),
       prisma.excelA.count(),
       prisma.excelB.findMany(),
     ]);
 
-    return NextResponse.json({ items, total, excelB });
+    // Before sending response, validate it's proper JSON
+    const response = { items, total, excelB };
+    console.log("API Response:", response);
+
+    return new Response(JSON.stringify(response), {
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Failed to fetch data" },
-      { status: 500 }
-    );
+    console.error("API Error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

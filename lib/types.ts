@@ -1,7 +1,7 @@
 export interface CustomerRecord {
   id: string;
   name: string;
-  interalId?: string;
+  internalId?: string;
   customerName?: string;
   locationId?: string;
   customerId?: string;
@@ -23,6 +23,8 @@ export interface CustomerRecord {
 }
 
 export type ProcessedData = {
+  excelA: CustomerRecord[];
+  excelB: CustomerRecord[];
   matches: {
     review: Array<[CustomerRecord, CustomerRecord]>;
     requiresAction: Array<[CustomerRecord, CustomerRecord]>;

@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
-import { useMatchStore } from "@/lib/store";
 import { processFiles } from "@/lib/process-files";
 
 export function FileUpload() {
   const router = useRouter();
-  const setData = useMatchStore((state) => state.setData);
   const [files, setFiles] = useState<{
     excelA?: File;
     excelB?: File;
@@ -49,8 +47,6 @@ export function FileUpload() {
       const data = await processFiles(files.excelA, files.excelB, (progress) =>
         setProgress(progress)
       );
-
-      setData(data);
       router.push("/results");
     } catch (err) {
       console.error("Upload error:", err);
@@ -78,7 +74,7 @@ export function FileUpload() {
         <Card className="p-6">
           <div className="flex flex-col items-center gap-4">
             <FileSpreadsheet className="h-12 w-12 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Old System (Excel A)</h2>
+            <h2 className="text-lg font-semibold">Excel from Fitness EMS</h2>
             <input
               type="file"
               accept=".xlsx"
@@ -99,7 +95,7 @@ export function FileUpload() {
         <Card className="p-6">
           <div className="flex flex-col items-center gap-4">
             <FileSpreadsheet className="h-12 w-12 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">NetSuite (Excel B)</h2>
+            <h2 className="text-lg font-semibold">Excel from Netsuite</h2>
             <input
               type="file"
               accept=".xlsx"

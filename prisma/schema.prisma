@@ -36,4 +36,24 @@ model ExcelB {
   id        Int      @id @default(autoincrement())
   internalId String
   name      String
-} 
+}
+
+model ReviewedData {
+  id Int @id @default(autoincrement())
+  fitnessEmsId            String
+  netsuiteId              String
+  fitnessEmsCustomerName  String
+  netsuiteCustomerName    String
+  eq                     String
+  type                   String
+  eqTracking             String
+  model                  String
+  category               String
+  consoleSerial          String
+  baseSerial             String
+  manufacturer           String 
+  history                String
+  status                 String
+  notes                  String
+  status2                String
+}

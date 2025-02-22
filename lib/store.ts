@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
-import { ProcessedData, CustomerRecord } from './types';
-import * as XLSX from 'xlsx';
+import { create } from "zustand";
+import { ProcessedData, CustomerRecord } from "./types";
+import * as XLSX from "xlsx";
 
 interface MatchState {
   data: ProcessedData | null;
@@ -17,13 +17,13 @@ interface MatchState {
 export const useMatchStore = create<MatchState>((set, get) => ({
   data: null,
   setData: (data) => set({ data }),
-  
+
   confirmMatch: (recordA, recordB) => {
     const data = get().data;
     if (!data) return;
 
     // Update match status
-    recordA.matchStatus = 'review';
+    recordA.matchStatus = "review";
     recordA.matchedId = recordB.id;
 
     set({ data: { ...data } });
@@ -34,7 +34,7 @@ export const useMatchStore = create<MatchState>((set, get) => ({
     if (!data) return;
 
     // Move to unmatched
-    recordA.matchStatus = 'unmatched';
+    recordA.matchStatus = "unmatched";
     recordA.matchedId = undefined;
 
     set({ data: { ...data } });
@@ -45,7 +45,7 @@ export const useMatchStore = create<MatchState>((set, get) => ({
     if (!data) return;
 
     matches.forEach(([recordA, recordB]) => {
-      recordA.matchStatus = 'review';
+      recordA.matchStatus = "review";
       recordA.matchedId = recordB.id;
     });
 
@@ -56,8 +56,8 @@ export const useMatchStore = create<MatchState>((set, get) => ({
     const data = get().data;
     if (!data) return;
 
-    records.forEach(record => {
-      record.matchStatus = 'unmatched';
+    records.forEach((record) => {
+      record.matchStatus = "unmatched";
       record.matchedId = undefined;
     });
 
@@ -69,12 +69,15 @@ export const useMatchStore = create<MatchState>((set, get) => ({
     if (!data) return;
 
     // Prepare data for export
-    const exportData = data.excelA.map(record => ({
-      'Old System ID': record.id,
-      'Old System Name': record.name,
-      'NetSuite ID': record.matchedId || '',
-      'Match Status': record.matchStatus || 'unmatched',
-      'Match Confidence': record.matchConfidence ? `${record.matchConfidence.toFixed(1)}%` : '',
+    const exportData = data.excelA.map((record) => ({
+      "FitnessEMS ID": record.id,
+      "FitnessEMS Name": record.customerName,
+      "NetSuite ID": record.matchedId || "",
+      "NetSuite Name": record.name || "",
+      "Match Status": record.matchStatus || "unmatched",
+      "Match Confidence": record.matchConfidence
+        ? `${record.matchConfidence.toFixed(1)}%`
+        : "",
     }));
 
     // Create workbook
@@ -82,9 +85,9 @@ export const useMatchStore = create<MatchState>((set, get) => ({
     const ws = XLSX.utils.json_to_sheet(exportData);
 
     // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Matched Customers');
+    XLSX.utils.book_append_sheet(wb, ws, "Matched Customers");
 
     // Save file
-    XLSX.writeFile(wb, 'customer-matches.xlsx');
+    XLSX.writeFile(wb, "customer-matches.xlsx");
   },
 }));

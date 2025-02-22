@@ -5,13 +5,16 @@ const prisma = new PrismaClient();
 
 export async function DELETE() {
   try {
-    // Clear data from both tables
-    await prisma.excelA.deleteMany({});
-    await prisma.excelB.deleteMany({});
+    // Delete all records from all tables
+    await prisma.$transaction([
+      prisma.excelA.deleteMany(),
+      prisma.excelB.deleteMany(),
+      prisma.reviewedData.deleteMany()
+    ]);
 
     return NextResponse.json({ message: 'Database cleared successfully' });
   } catch (error) {
-    console.error(error);
+    console.error('Failed to clear database:', error);
     return NextResponse.json({ error: 'Failed to clear database' }, { status: 500 });
   }
 } 
